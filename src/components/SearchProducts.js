@@ -46,7 +46,7 @@ const SearchProducts = () => {
       video.current.play();
       const ctx = canvas.current.getContext('2d');
       const barcode = new window.BarcodeDetector({formats: ['qr_code','ean_13']});
-      setInterval(()=>{
+      var interval= setInterval(()=>{
         canvas.current.width=video.current.videoWidth;
         canvas.current.height=video.current.videoHeight;
         ctx.drawImage(video.current,0,0,video.current.videoWidth,video.current.videoHeight);
@@ -54,13 +54,12 @@ const SearchProducts = () => {
           if(data){
             canvas.current.width=0;
             canvas.current.height=0;
+            stream.getTracks()[0].stop();
             video.current.pause();
-            stream.getTracks().forEach(function(track){
-              track.stop();
-            })
             ctx.clearRect(0,0,0,0);
             setSearchTerm(data.rawValue);
             fetchData(`${baseUrl}/Prices?productName=${data.rawValue}`);
+            clearInterval(interval);
           }
           else{
             console.log('No encontré un código');
