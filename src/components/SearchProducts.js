@@ -40,7 +40,7 @@ const SearchProducts = () => {
   const canvas = useRef(null)
 
   const openCam = () =>{
-    navigator.mediaDevices.getUserMedia({ video: {width: 300, height:300, facingMode: 'environment'}})
+    navigator.mediaDevices.getUserMedia({ video: {width: 300, height:300, facingMode: {exact: 'environment'}}})
     .then(stream=>{
       video.current.srcObject=stream;
       video.current.play();
@@ -91,7 +91,7 @@ const SearchProducts = () => {
       >
       Codigo
       </Button>  
-      <video ref={video} autoPlay muted hidden/>
+      <video ref={video} autoPlay muted/>
       <canvas ref={canvas}/>
       {loading ? (
         <p>Loading...</p>
