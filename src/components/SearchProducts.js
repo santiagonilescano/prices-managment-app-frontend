@@ -52,13 +52,12 @@ const SearchProducts = () => {
         ctx.drawImage(video.current,0,0,video.current.videoWidth,video.current.videoHeight);
         barcode.detect(canvas.current).then(([data])=>{
           if(data){
-            video.current.end();
             canvas.current.width=0;
             canvas.current.height=0;
+            video.current.pause();
             clearInterval(canvas);
             setSearchTerm(data.rawValue);
             fetchData(`${baseUrl}/Prices?productName=${data.rawValue}`);
-            
           }
           else{
             console.log('No encontré un código');
