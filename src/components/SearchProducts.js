@@ -40,6 +40,7 @@ const SearchProducts = () => {
   const canvas = useRef(null)
 
   const openCam = () =>{
+    const barcode = new window.BarcodeDetector({formats: ['qr_code','ean_13']});
     navigator.mediaDevices.getUserMedia({ video: {width: 100, height:100}})
     .then(stream=>{
       video.current.srcObject=stream;
