@@ -55,6 +55,9 @@ const SearchProducts = () => {
             canvas.current.width=0;
             canvas.current.height=0;
             video.current.pause();
+            stream.getTracks().forEach(function(track){
+              track.stop();
+            })
             ctx.clearRect(0,0,0,0);
             setSearchTerm(data.rawValue);
             fetchData(`${baseUrl}/Prices?productName=${data.rawValue}`);
