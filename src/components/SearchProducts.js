@@ -40,7 +40,7 @@ const SearchProducts = () => {
   const canvas = useRef(null)
 
   const openCam = () =>{
-    navigator.mediaDevices.getUserMedia({ video: {width: 300, height:300, facingMode: {exact: 'environment'}}})
+    navigator.mediaDevices.getUserMedia({ video: {width: 300, height:300, facingMode: 'environment'}})
     .then(stream=>{
       video.current.srcObject=stream;
       video.current.play();
