@@ -52,11 +52,13 @@ const SearchProducts = () => {
         ctx.drawImage(video.current,0,0,video.current.videoWidth,video.current.videoHeight);
         barcode.detect(canvas.current).then(([data])=>{
           if(data){
-            video.current.pause();
-            setSearchTerm(data.rawValue);
-            handleSearch();
+            video.current.end();
             canvas.current.width=0;
             canvas.current.height=0;
+            clearInterval(canvas);
+            setSearchTerm(data.rawValue);
+            fetchData(`${baseUrl}/Prices?productName=${data.rawValue}`);
+            
           }
           else{
             console.log('No encontré un código');
@@ -91,7 +93,7 @@ const SearchProducts = () => {
       >
       Codigo
       </Button>  
-      <video ref={video} autoPlay muted/>
+      <video ref={video} autoPlay muted hidden/>
       <canvas ref={canvas}/>
       {loading ? (
         <p>Loading...</p>
