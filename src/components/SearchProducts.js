@@ -50,7 +50,15 @@ const SearchProducts = () => {
         canvas.current.width=video.current.videoWidth;
         canvas.current.height=video.current.videoHeight;
         ctx.drawImage(video.current,0,0,video.current.videoWidth,video.current.videoHeight);
-        barcode.detect(canvas.current).then(([data])=> console.log(data));
+        barcode.detect(canvas.current).then(([data])=>{
+          if(data){
+            setSearchTerm(data.rawValue);
+            video.current.pause();
+          }
+          else{
+            console.log('No encontré un código');
+          }
+        });
       },100)
     })
     .catch(err=> console.log(err))
