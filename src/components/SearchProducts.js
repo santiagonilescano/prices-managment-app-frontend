@@ -9,6 +9,7 @@ import TableCell from '@mui/material/TableCell';
 import Typography from '@mui/material/Typography';
 import { format } from 'date-fns'; // Import the format function from date-fns
 import { Button } from '@mui/material';
+import EditProductModal from './EditProductModal';
 
 const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -16,6 +17,7 @@ const SearchProducts = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const { data: searchResults, loading, error, fetchData } = useApi();
   const [delayedSearch, setDelayedSearch] = useState(null);
+  
 
   const handleSearch = (event) => {
     const term = event.target.value;
@@ -69,7 +71,28 @@ const SearchProducts = () => {
     })
     .catch(err=> console.log(err))
   }
-  
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+
+  const handleEdit = (productId) => {
+    const selectedProduct = searchResults.find((product) => product.id === productId);
+    setEditingProduct(selectedProduct);
+    setIsEditModalOpen(true);
+  };
+
+  const handleSaveEdit = (updatedProduct) => {
+    // Implement logic to save changes (e.g., update product details in the database)
+    // After saving, trigger a data refresh
+    fetchData(`${baseUrl}/Prices?productName=${searchTerm}`);
+    setEditingProduct(null); // Close the edit form
+    setIsEditModalOpen(false);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingProduct(null); // Close the edit form
+    setIsEditModalOpen(false);
+  };
 
   return (
     <div style={{ padding: '16px', maxWidth: '500px', margin: '0 auto', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -104,8 +127,6 @@ const SearchProducts = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Codigo</TableCell>
               <TableCell>Nombre</TableCell>
               <TableCell>Precio Costo</TableCell>
               <TableCell>Precio Venta</TableCell>
@@ -116,8 +137,6 @@ const SearchProducts = () => {
           <TableBody>
             {searchResults.map(product => (
               <TableRow key={product.id}>
-                <TableCell>{product.id}</TableCell>
-                <TableCell>{product.barCode}</TableCell>
                 <TableCell>{product.description}</TableCell>
                 <TableCell>{product.costPrice}</TableCell>
                 <TableCell>{product.price}</TableCell>
@@ -129,11 +148,21 @@ const SearchProducts = () => {
                     'N/A' // Or display 'N/A' if lastUpdate is null or undefined
                   )}
                 </TableCell>
+                <TableCell>
+                  <Button onClick={() => handleEdit(product.id)}>Actualizar</Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       )}
+      <EditProductModal
+        open={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        product={editingProduct}
+        onSave={handleSaveEdit}
+        onCancel={handleCancelEdit}
+      />
     </div>
   )};
 export default SearchProducts;
